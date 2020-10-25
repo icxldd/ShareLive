@@ -135,7 +135,7 @@ class _ShowVideoState extends State<ShowVideo> {
             children: List.generate(files.length, (index) {
               return Image.network(
                 files[index]["url"],
-                width: 150.0,
+                width: 80.0,
               );
             }),
           );

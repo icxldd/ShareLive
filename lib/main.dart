@@ -1,15 +1,19 @@
 import 'dart:html';
 
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:web_test/Common/GlobalChace.dart';
 import 'Common/Common.dart';
 import 'Common/HttpUrl.dart';
+import 'Common/router.dart';
 import 'GlobalData/color.dart';
 import 'HTTP/request.dart';
 import 'Pages/ShowVideo_page.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:html' as html;
 
 main() async {
+  FluroRouter_.setupRouter();
   runApp(MyApp());
 }
 
@@ -19,10 +23,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: '云教会直播',
-      initialRoute: '/',
-      routes: <String, WidgetBuilder>{
-        '/': (context) => MyHomePage(title: '云教会'),
-      },
+      // initialRoute: '/Live',
+      // routes: <String, WidgetBuilder>{
+      //   '/Live': (context) => MyHomePage(title: '云教会'),
+      // },
+      onGenerateRoute: (x) => FluroRouter_.router.generator(x),
       theme: ThemeData(
         primaryColor: GlobalColor,
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -33,36 +38,20 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key key, this.title, this.videoid}) : super(key: key);
   final String title;
+  final String videoid;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String _videoid = '';
+  String _videoid = '107372194400468992';
 
   @override
   Widget build(BuildContext context) {
     ScreenInfo info = getScreenObj(context);
-    // var val = getQueryParameters();
-    // if (val == null) {
-    //   _videoid = getCookie('liveId');
-    // } else {
-    //   _videoid = val['liveId'] ?? "107363190861365248";
-    //   setCookie('liveId', _videoid);
-    //   // print(getCookie('liveId'));
-    // }
-    //107372194400468992
-    //106738710711533568
-    var val = getQueryParameters();
-    if ((val['liveId'] ?? '') != '') {
-      liveId = val['liveId'];
-      _videoid = val['liveId'];
-    } else {
-      _videoid = liveId;
-    }
 
     return Scaffold(
         appBar: AppBar(
@@ -73,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             children: [
               ShowVideo(
-                videoID: _videoid,
+                videoID: widget.videoid,
               ),
               Container(
                 child: RaisedButton(
