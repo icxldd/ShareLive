@@ -61,7 +61,7 @@ class _ShowVideoState extends State<ShowVideo> {
                   buildIjkPlayer(snapshot.data["livecast"]["hlsPlayUrl"]),
                   Container(
                     // alignment: Alignment.centerLeft,
-                    margin: EdgeInsets.only(top: 10, left: 10),
+                    margin: EdgeInsets.only(top: 15, left: 15),
                     child: Column(
                       // mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,34 +82,34 @@ class _ShowVideoState extends State<ShowVideo> {
                                 Text(createdDate)
                               ],
                             ),
-                            margin: EdgeInsets.only(top: 10, bottom: 10)),
+                            margin: EdgeInsets.only(top: 15, bottom: 15)),
                         Container(
                           child: Text(
                             '简介:',
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold),
                           ),
-                          margin: EdgeInsets.only(bottom: 10),
+                          margin: EdgeInsets.only(bottom: 15),
                         ),
                         (description ?? '') == ''
                             ? Container(
                                 child:
                                     Text(creatordisplayName + '  牧师此次直播没有发布简介'),
-                                margin: EdgeInsets.only(bottom: 10),
+                                margin: EdgeInsets.only(bottom: 15),
                               )
                             : Container(
                                 child: Text(description),
-                                margin: EdgeInsets.only(bottom: 10),
+                                margin: EdgeInsets.only(bottom: 15),
                               ),
-                        Container(
-                          child: Text(
-                            '图片资料:',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          margin: EdgeInsets.only(bottom: 10),
-                        ),
-                        buildImages(creatordisplayName, files)
+                        // Container(
+                        //   child: Text(
+                        //     '图片资料:',
+                        //     style: TextStyle(
+                        //         fontSize: 18, fontWeight: FontWeight.bold),
+                        //   ),
+                        //   margin: EdgeInsets.only(bottom: 10),
+                        // ),
+                        // buildImages(creatordisplayName, files)
                       ],
                     ),
                   ),
