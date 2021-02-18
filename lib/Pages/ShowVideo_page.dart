@@ -34,98 +34,117 @@ class _ShowVideoState extends State<ShowVideo> {
     ScreenInfo info = getScreenObj(context);
 
     // print(widget.videoID);
-    return FutureBuilder<dynamic>(
-        future: getLiveInfo(widget.videoID),
-        builder: (context, AsyncSnapshot<dynamic> snapshot) {
-          if (snapshot.hasData) {
-            String title = snapshot.data["livecast"]["title"],
-                createdDate = snapshot.data["livecast"]["createdDate"],
-                creatordisplayName =
-                    snapshot.data["livecast"]["creator"]["displayName"],
-                guilddisplayName =
-                    snapshot.data["livecast"]["guild"]["displayName"],
-                description = snapshot.data["livecast"]["description"];
-            dynamic files = snapshot.data["livecast"]["imageFiles"];
+    return Container(
+      child: FutureBuilder<dynamic>(
+          future: getLiveInfo(widget.videoID),
+          builder: (context, AsyncSnapshot<dynamic> snapshot) {
+            if (snapshot.hasData) {
+              bool error = snapshot.data == -1;
 
-            guildId = snapshot.data["livecast"]["guild"]["guildId"];
-            pastorId = snapshot.data["livecast"]["creator"]["userId"];
-            return Container(
-              height: info.height - 120,
-              // decoration: BoxDecoration(
-              //   border: Border.all(
-              //     width: 1, //                   <--- border width here
-              //   ),
-              // ),
-              child: Column(
-                children: [
-                  buildIjkPlayer(snapshot.data["livecast"]["hlsPlayUrl"]),
-                  Container(
-                    // alignment: Alignment.centerLeft,
-                    margin: EdgeInsets.only(top: 15, left: 15),
-                    child: Column(
-                      // mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(title,
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold)),
-                        Container(
-                            child: Row(
-                              children: [
-                                Text(guilddisplayName,
-                                    style: TextStyle(
-                                        // color: Colors.red,
-                                        fontWeight: FontWeight.bold)),
-                                Text('  '),
-                                Text("牧师 : " + creatordisplayName),
-                                Text(' | '),
-                                Text(createdDate)
-                              ],
-                            ),
-                            margin: EdgeInsets.only(top: 15, bottom: 15)),
-                        Container(
-                          child: Text(
-                            '简介:',
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          margin: EdgeInsets.only(bottom: 15),
-                        ),
-                        (description ?? '') == ''
-                            ? Container(
-                                child:
-                                    Text(creatordisplayName + '  牧师此次直播没有发布简介'),
-                                margin: EdgeInsets.only(bottom: 15),
-                              )
-                            : Container(
-                                child: Text(description),
-                                margin: EdgeInsets.only(bottom: 15),
-                              ),
-                        // Container(
-                        //   child: Text(
-                        //     '图片资料:',
-                        //     style: TextStyle(
-                        //         fontSize: 18, fontWeight: FontWeight.bold),
-                        //   ),
-                        //   margin: EdgeInsets.only(bottom: 10),
-                        // ),
-                        // buildImages(creatordisplayName, files)
-                      ],
-                    ),
+              if (error) {
+                return Container(
+                  height: info.height - 120,
+                  child: Center(
+                    child: Text('直播已结束'),
                   ),
-                ],
-              ),
-            );
-          } else {
-            return CircularProgressIndicator();
-          }
-        });
+                );
+              } else {
+                String title = snapshot.data["livecast"]["title"],
+                    createdDate = snapshot.data["livecast"]["createdDate"],
+                    creatordisplayName =
+                        snapshot.data["livecast"]["creator"]["displayName"],
+                    creatordMemberisplayName =
+                        snapshot.data["livecast"]["creatorMember"]["nickname"],
+                    guilddisplayName =
+                        snapshot.data["livecast"]["guild"]["displayName"],
+                    description = snapshot.data["livecast"]["description"];
+                dynamic files = snapshot.data["livecast"]["imageFiles"];
+
+                guildId = snapshot.data["livecast"]["guild"]["guildId"];
+                pastorId = snapshot.data["livecast"]["creator"]["userId"];
+                String url = snapshot.data["livecast"]["recordUrl"] == null
+                    ? snapshot.data["livecast"]["hlsPlayUrl"]
+                    : snapshot.data["livecast"]["recordUrl"];
+
+                return Container(
+                  height: info.height - 120,
+                  // decoration: BoxDecoration(
+                  //   border: Border.all(
+                  //     width: 1, //                   <--- border width here
+                  //   ),
+                  // ),
+                  child: Column(
+                    children: [
+                      buildIjkPlayer(url),
+                      Container(
+                        // alignment: Alignment.centerLeft,
+                        margin: EdgeInsets.only(top: 15, left: 15),
+                        child: Column(
+                          // mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(title,
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold)),
+                            Container(
+                                child: Row(
+                                  children: [
+                                    Text(guilddisplayName,
+                                        style: TextStyle(
+                                            // color: Colors.red,
+                                            fontWeight: FontWeight.bold)),
+                                    Text('  '),
+                                    Text("发布者 : " + creatordMemberisplayName),
+                                    // Text(' | '),
+                                    // Text(createdDate)
+                                  ],
+                                ),
+                                margin: EdgeInsets.only(top: 15, bottom: 15)),
+                            Container(
+                              child: Text(
+                                '简介:',
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              margin: EdgeInsets.only(bottom: 15),
+                            ),
+                            (description ?? '') == ''
+                                ? Container(
+                                    child: Text(creatordMemberisplayName +
+                                        '  此次直播没有发布简介'),
+                                    margin: EdgeInsets.only(bottom: 15),
+                                  )
+                                : Container(
+                                    child: Text(description),
+                                    margin: EdgeInsets.only(bottom: 15),
+                                  ),
+                            // Container(
+                            //   child: Text(
+                            //     '图片资料:',
+                            //     style: TextStyle(
+                            //         fontSize: 18, fontWeight: FontWeight.bold),
+                            //   ),
+                            //   margin: EdgeInsets.only(bottom: 10),
+                            // ),
+                            // buildImages(creatordisplayName, files),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+            } else {
+              return CircularProgressIndicator();
+            }
+          }),
+    );
   }
 
   Widget buildImages(creatordisplayName, dynamic files) {
     return files.length == 0
         ? Container(
-            child: Text(creatordisplayName + '  牧师此次直播没有发布资料'),
+            child: Text(creatordisplayName + '  发布者此次直播没有发布资料'),
             margin: EdgeInsets.only(bottom: 10),
           )
         : Wrap(

@@ -49,36 +49,41 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String _videoid = '107372194400468992';
 
+  get isHasKey => widget.videoid != '/';
   @override
   Widget build(BuildContext context) {
     ScreenInfo info = getScreenObj(context);
-
+    print(isHasKey);
     return Scaffold(
         appBar: AppBar(
           title: Center(child: Text(widget.title)),
         ),
-        body: Container(
-            child: Scrollbar(
-          child: Column(
-            children: [
-              ShowVideo(
-                videoID: widget.videoid,
-              ),
-              Container(
-                child: RaisedButton(
-                  color: GlobalColor,
-                  onPressed: () {
-                    _launchURL(
-                        "https://church.yangqungongshe.com/promotion/signup/view?guild=$guildId&pastor=$pastorId");
-                  },
-                  child: Text('加入教会，观看更多讲道'),
+        body: isHasKey
+            ? Container(
+                child: Column(
+                children: [
+                  ShowVideo(
+                    videoID: widget.videoid,
+                  ),
+                  // Container(
+                  //   child: RaisedButton(
+                  //     color: GlobalColor,
+                  //     onPressed: () {
+                  //       _launchURL(
+                  //           "https://church.yangqungongshe.com/promotion/signup/view?guild=$guildId&pastor=$pastorId");
+                  //     },
+                  //     child: Text('加入教会，观看更多讲道'),
+                  //   ),
+                  //   width: info.width,
+                  //   height: 50,
+                  // )
+                ],
+              ))
+            : Container(
+                child: Center(
+                  child: Text('直播已结束'),
                 ),
-                width: info.width,
-                height: 50,
-              )
-            ],
-          ),
-        )));
+              ));
   }
 }
 

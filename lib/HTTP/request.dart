@@ -20,9 +20,12 @@ void initDio() {
 // ignore: missing_return
 Future<String> initToken() async {
   try {
+    print('inittoken');
     Response response = await Dio().post(
         "https://church.yangqungongshe.com/account/auth/mobile",
         data: {"PhoneNumber": '13588888888', 'Token': '8888'});
+
+    print('endtoken');
     return response.data["sessionId"];
   } catch (e) {
     print(e);
@@ -30,16 +33,20 @@ Future<String> initToken() async {
 }
 
 Future<dynamic> getLiveInfo(livecastid) async {
-  if (token == "") {
-    token = await initToken();
-  } else {}
-  Options op = new Options();
-  op.headers["X-ss-pid"] = token;
-  op.headers["X-ss-opt"] = "perm";
-  Response response = await Dio().get(
-      "https://church.yangqungongshe.com/module/livecast/show?LivecastId=" +
-          livecastid,
-      options: op);
-  // print(response.data);
-  return response.data;
+  try {
+    if (token == "") {
+      token = await initToken();
+    } else {}
+    Options op = new Options();
+    op.headers["X-ss-pid"] = token;
+    op.headers["X-ss-opt"] = "perm";
+    print('liveid' + livecastid);
+    Response response = await Dio().get(
+        "https://church.yangqungongshe.com/module/livecast/show?LivecastId=" +
+            livecastid,
+        options: op);
+    return response.data;
+  } catch (e) {
+    return -1;
+  }
 }
